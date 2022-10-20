@@ -9,7 +9,9 @@
     "migration:create": "knex migrate:make",
     "migration:latest": "knex migrate:latest",
     "seed:create": "knex seed:make",
-    "seed:run": "knex seed:run"
+    "seed:run": "knex seed:run",
+    "test:integration:dev": "jest --runInBand --config=jest.config.js",
+    "test:integration": "npm run migration:latest && npm run seed:run && jest --runInBand --config=jest.config.js"
   },
   "repository": {
     "type": "git",
@@ -25,7 +27,9 @@
   "devDependencies": {
     "@types/compression": "^1.7.2",
     "@types/express": "^4.17.13",
-    "@types/node": "^17.0.17"
+    "@types/jest": "^29.1.2",
+    "@types/node": "^17.0.17",
+    "@types/supertest": "^2.0.12"
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -36,6 +40,8 @@
     "knex": "^2.3.0",
     "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",
+    "supertest": "^6.3.0",
+    "ts-jest": "^29.0.3",
     "ts-node-dev": "^1.1.8",
     "tsyringe": "^4.6.0"
   }

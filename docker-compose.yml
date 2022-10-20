@@ -1,5 +1,19 @@
-version: '2.1'
+version: '3.8'
 services:
+  integration-test-app:
+    build:
+      context: .
+    command: './waiting-for.sh db:3306 --strict --timeout=300 -- npm run test:integration'
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_SCHEMA=integration_test_sample
+      - MYSQL_PORT=3306
+    depends_on:
+      - db
+    networks:
+      - net
   db:
     container_name: mysql8
     image: mysql:8.0
@@ -8,7 +22,16 @@ services:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=${MYSQL_SCHEMA}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 5s
+      retries: 10
     volumes:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - '3305:3306'
+    networks:
+      - net
+networks:
+  net:
+    driver: bridge
